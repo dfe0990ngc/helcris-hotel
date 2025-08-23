@@ -403,7 +403,7 @@ const BookingCard: React.FC<{
       </div>
       <div>
         <p className="mb-1 text-gray-500">Total Amount</p>
-        <p className="font-bold text-[#008ea2] text-lg">${booking.total_amount}</p>
+        <p className="font-bold text-[#008ea2] text-lg">₱{booking.total_amount}</p>
       </div>
     </div>
     
@@ -433,7 +433,7 @@ const FeaturedRoomCard: React.FC<{ room: Room }> = React.memo(({ room }) => (
         </div>
       )}
       <div className="top-2 right-2 absolute bg-white bg-opacity-95 shadow-sm px-2 py-1 rounded-full">
-        <span className="font-bold text-[#008ea2] text-sm">${room.price_per_night}/night</span>
+        <span className="font-bold text-[#008ea2] text-sm">₱{room.price_per_night}/night</span>
       </div>
       {room.rating && (
         <div className="top-2 left-2 absolute flex items-center space-x-1 bg-white bg-opacity-95 shadow-sm px-2 py-1 rounded-full">

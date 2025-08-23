@@ -230,7 +230,7 @@ const BookingManagement: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex justify-center items-center bg-gray-200 rounded-full w-8 h-8">
-                        {booking?.user?.profile_url && <img src={booking?.user?.profile_url} alt="Profile" className="w-full h-full object-cover"/>}
+                        {booking?.user?.profile_url && <img src={booking?.user?.profile_url} alt="Profile" className="rounded-full w-full h-full object-cover"/>}
                         {!booking?.user?.profile_url && <User className="w-4 h-4 text-gray-600" />}
                       </div>
                       <div className="ml-3">

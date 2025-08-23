@@ -267,6 +267,21 @@ const RoomBrowsing: React.FC = () => {
                   ))}
                 </select>
               </div>
+
+              {selectedRoom?.amenities && <div className="mt-3 mb-6">
+                <p className="mb-2 font-medium text-gray-700 text-sm">Amenities:</p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedRoom?.amenities.map((amenity) => {
+                    const IconComponent = amenityIcons[amenity] || Wind;
+                    return (
+                      <div key={amenity} className="flex items-center space-x-1 bg-gray-100 px-2 py-1 rounded-full text-gray-600 text-xs">
+                        <IconComponent className="w-3 h-3" />
+                        <span>{amenity}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>}
               
               <div>
                 <label className="block mb-1 font-medium text-gray-700 text-sm">

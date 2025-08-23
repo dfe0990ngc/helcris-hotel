@@ -115,7 +115,7 @@ const GuestBookings: React.FC = () => {
 
       {/* Tab Navigation */}
       <div className="bg-white shadow-sm border border-gray-200 rounded-lg">
-        <div className="border-gray-200 border-b">
+        <div className="border-gray-200 border-b overflow-x-auto">
           <nav className="flex space-x-8 px-6">
             {[
               { id: 'upcoming', label: 'Upcoming', count: filterBookings('upcoming').length },

@@ -187,7 +187,7 @@ const AdminSettings: React.FC = () => {
 
       <div className="bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden">
         {/* Tab Navigation */}
-        <div className="border-gray-200 border-b">
+        <div className="border-gray-200 border-b overflow-x-auto">
           <nav className="flex space-x-8 px-6">
             {tabs.map((tab) => {
               const Icon = tab.icon;

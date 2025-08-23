@@ -286,9 +286,12 @@ const UserManagement: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex justify-center items-center bg-[#008ea2] bg-opacity-10 rounded-full w-10 h-10">
-                        <span className="font-medium text-[#008ea2] text-sm">
+                        {user?.profile_url && <img src={user?.profile_url} alt="Profile" className="rounded-full w-full h-full object-cover"/>}
+                        {!user?.profile_url && 
+                        <span className="font-medium text-[#008ea2] text-xs">
                           {user.name.charAt(0).toUpperCase()}
-                        </span>
+                        </span>}
+
                       </div>
                       <div className="ml-4">
                         <div className="font-medium text-gray-900 text-sm">{user.name}</div>
@@ -411,7 +414,7 @@ const UserManagement: React.FC = () => {
               <div key={user.id} className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="flex justify-center items-center bg-[#008ea2] bg-opacity-10 rounded-full w-8 h-8">
-                    {user?.profile_url && <img src={user?.profile_url} alt="Profile" className="w-full h-full object-cover"/>}
+                    {user?.profile_url && <img src={user?.profile_url} alt="Profile" className="rounded-full w-full h-full object-cover"/>}
                     {!user?.profile_url && 
                     <span className="font-medium text-[#008ea2] text-xs">
                       {user.name.charAt(0).toUpperCase()}
