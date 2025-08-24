@@ -2,6 +2,8 @@
 
 This is a sample web application for frontliner students specifically at Polytechnic College of Davao del Sur.
 
+Site URL: https://helcris-hotel.pcds.edu.ph/
+
 ## 🚀 Getting Started
 
 Follow these steps to get the development environment up and running on your local machine.
