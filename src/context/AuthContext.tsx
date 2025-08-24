@@ -67,6 +67,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  useEffect(() => {
+    document.title = hotelInfo?.hotel_name || "HILL CREST SUITES";
+  },[hotelInfo]);
+
   const fetchInfo = async () => {
     try{
       const { data } = await info();
