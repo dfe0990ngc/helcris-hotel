@@ -5,6 +5,7 @@ import LoadingSpinner from '../../components/Common/LoadingSpinner';
 import { Plus, Edit, Trash2, Wifi, Tv, Wind, Bath, Coffee, Car, Utensils, Bed, Users, CakeSlice, Heater, HardHat, PanelsLeftBottomIcon, PanelBottom, EditIcon, UploadCloud, MoonStar } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext.js';
+import DirectCloudinaryUpload from '../../components/Common/DirectCloudinaryUpload.js';
 
 const amenityIcons: { [key: string]: React.ComponentType<{ className?: string }> } = {
   'WiFi': Wifi,
@@ -212,6 +213,10 @@ const RoomManagement: React.FC = () => {
   };
 
   // if (loading) return <LoadingSpinner />;
+
+  const handleImages = (images) => {
+    console.log(images);
+  }
 
   return (
     <div className="space-y-6">
@@ -497,45 +502,29 @@ const RoomManagement: React.FC = () => {
       {/* Image Modal */}
       {showImageUrlModal && (
         <div className="-top-[25px] z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white p-6 rounded-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
+          <div className="bg-white p-6 rounded-lg w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <h2 className="mb-4 font-bold text-gray-900 text-xl">Update Image URL</h2>
             
-            <form onSubmit={handleUpdateImageUrl} className="space-y-4">
-              
-                <div className="w-full">
-                  <label htmlFor="url" className="block mb-2 font-medium text-gray-700 text-sm">Image URL</label>
-                  <input
-                  type="url"
-                  id="url"
-                  name="url"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                  className="px-4 py-3 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#008ea2] focus:ring-2 w-full transition-all"
-                  placeholder="Enter Image URL"
-                  required
-                  />
-              </div>
+            <DirectCloudinaryUpload imageUrl={imageUrl}  setImageUrl={setImageUrl}/>
 
-              <div className="flex space-x-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowImageUrlModal(false);
-                    setSelectedRoom(null);
-                    setImageUrl('');
-                  }}
-                  className="flex-1 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 transition-colors"
-                  disabled={saving}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className={`flex-1 bg-[#008ea2] hover:bg-[#006b7a] px-4 py-2 rounded-lg text-white transition-colors ${saving ? 'cursor-not-allowed opacity-75' : ''}`}
-                  disabled={saving}
-                >{saving ? 'Submitting...' : 'Submit'}</button>
-              </div>
-            </form>
+            <div className="flex space-x-3 pt-4">
+              <button
+                onClick={() => {
+                  setShowImageUrlModal(false);
+                  setSelectedRoom(null);
+                  setImageUrl('');
+                }}
+                className="flex-1 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 transition-colors"
+                disabled={saving}
+              >
+                Cancel
+              </button>
+              <button onClick={handleUpdateImageUrl}
+                className={`flex-1 bg-[#008ea2] hover:bg-[#006b7a] px-4 py-2 rounded-lg text-white transition-colors ${saving ? 'cursor-not-allowed opacity-75' : ''}`}
+                disabled={saving}
+              >{saving ? 'Submitting...' : 'Submit'}</button>
+            </div>
+
           </div>
         </div>
       )}
