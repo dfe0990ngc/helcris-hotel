@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { rooms as apiRooms, createRoom, updateRoom, updateRoomImage, deleteRoom } from '../../api/api.js';
 import { Room } from '../../types';
 import LoadingSpinner from '../../components/Common/LoadingSpinner';
-import { Plus, Edit, Trash2, Wifi, Tv, Wind, Bath, Coffee, Car, Utensils, Bed, Users, CakeSlice, Heater, HardHat, PanelsLeftBottomIcon, PanelBottom, EditIcon, UploadCloud, MoonStar } from 'lucide-react';
+import { Plus, Edit, Trash2, Wifi, Tv, Wind, Bath, Coffee, Car, Utensils, Bed, Users, CakeSlice, Heater, HardHat, PanelsLeftBottomIcon, PanelBottom, EditIcon, MoonStar } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext.js';
 import DirectCloudinaryUpload from '../../components/Common/DirectCloudinaryUpload.js';

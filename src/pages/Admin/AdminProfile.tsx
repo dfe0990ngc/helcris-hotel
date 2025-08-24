@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { User, Mail, Phone, Calendar, Lock, Save, Edit2 } from 'lucide-react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import DirectCloudinaryUpload from '../../components/Common/DirectCloudinaryUpload.js';
 
 import { updateUserProfile, updateUserImage, updateUserPassword } from '../../api/api.js';
 
@@ -332,40 +333,24 @@ const AdminProfile: React.FC = () => {
         <div className="-top-[25px] z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-4">
           <div className="bg-white p-6 rounded-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <h2 className="mb-4 font-bold text-gray-900 text-xl">Update Profile Image URL</h2>
-            
-            <form onSubmit={handleUpdateImageUrl} className="space-y-4">
-              
-                <div className="w-full">
-                  <label htmlFor="url" className="block mb-2 font-medium text-gray-700 text-sm">Image URL</label>
-                  <input
-                  type="url"
-                  id="url"
-                  name="url"
-                  value={user?.profile_url}
-                  onChange={(e) => setUser({...user,profile_url: e.target.value})}
-                  className="px-4 py-3 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#008ea2] focus:ring-2 w-full transition-all"
-                  placeholder="Enter Image URL"
-                  />
-              </div>
 
-              <div className="flex space-x-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowImageUrlModal(false);
-                  }}
-                  className="flex-1 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 transition-colors"
-                  disabled={saving}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className={`flex-1 bg-[#008ea2] hover:bg-[#006b7a] px-4 py-2 rounded-lg text-white transition-colors ${saving ? 'cursor-not-allowed opacity-75' : ''}`}
-                  disabled={saving}
-                >{saving ? 'Submitting...' : 'Submit'}</button>
-              </div>
-            </form>
+            <DirectCloudinaryUpload className="object-top" imageUrl={user?.profile_url}  setImageUrl={(url) => setUser({...user,profile_url: url})}/>
+            
+            <div className="flex space-x-3 pt-4">
+              <button
+                onClick={() => {
+                  setShowImageUrlModal(false);
+                }}
+                className="flex-1 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 transition-colors"
+                disabled={saving}
+              >
+                Cancel
+              </button>
+              <button onClick={handleUpdateImageUrl}
+                className={`flex-1 bg-[#008ea2] hover:bg-[#006b7a] px-4 py-2 rounded-lg text-white transition-colors ${saving ? 'cursor-not-allowed opacity-75' : ''}`}
+                disabled={saving}
+              >{saving ? 'Submitting...' : 'Submit'}</button>
+            </div>
           </div>
         </div>
       )}

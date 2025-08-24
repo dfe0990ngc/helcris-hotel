@@ -3,11 +3,13 @@ import React, { useState } from "react";
 interface CloudinaryUploaderProps {
   imageUrl?: string; // allow parent to control state
   setImageUrl: (url: string) => void; // update caller state
+  className?: string;
 }
 
 const CloudinaryUploader: React.FC<CloudinaryUploaderProps> = ({
   imageUrl,
   setImageUrl,
+  className = 'object-center',
 }) => {
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -64,7 +66,7 @@ const CloudinaryUploader: React.FC<CloudinaryUploaderProps> = ({
           <img
             src={imageUrl}
             alt="Uploaded"
-            className="shadow-md border w-full max-h-60 object-cover"
+            className={`shadow-md border w-full max-h-60 object-cover ${className}`}
           />
           <p className="mt-2 text-gray-500 text-xs break-all">{imageUrl}</p>
         </div>
