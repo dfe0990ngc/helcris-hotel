@@ -78,6 +78,9 @@ export const putFormData = (url, formData, config = {}) => {
 // ==================================================
 export const getCsrfCookie = () => get("/sanctum/csrf-cookie");
 
+// Hotel info
+export const info = async () => { return get(`/api/hotel-info`); }
+
 
 // ==================================================
 // SECURITY AUTH

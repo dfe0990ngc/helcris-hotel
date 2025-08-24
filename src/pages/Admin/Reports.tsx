@@ -43,7 +43,7 @@ const Reports: React.FC = () => {
 
   // Use AbortController for request cancellation
   const abortControllerRef = useRef<AbortController | null>(null);
-  const { logout } = useAuth();
+  const { logout, hotelInfo } = useAuth();
 
   // Memoize the fetch function to prevent unnecessary re-renders
   const fetchReport = useCallback(async (selectedTimeRange: string, signal?: AbortSignal) => {
@@ -191,7 +191,7 @@ const Reports: React.FC = () => {
           <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="Total Revenue"
-              value={`₱${report.total_revenue?.toLocaleString() || '0'}`}
+              value={`${hotelInfo?.currency_symbol}${report.total_revenue?.toLocaleString() || '0'}`}
               icon={DollarSign}
               trend={report.total_revenue_trend || {value: 0, isPositive: false}}
               color="#008ea2"
@@ -212,7 +212,7 @@ const Reports: React.FC = () => {
             />
             <StatCard
               title="Average Daily Rate"
-              value={`₱${report.average_daily_rate?.toLocaleString() || '0'}`}
+              value={`${hotelInfo?.currency_symbol}${report.average_daily_rate?.toLocaleString() || '0'}`}
               icon={TrendingUp}
               trend={report.average_daily_rate_trend || {value: 0, isPositive: false}}
               color="#8B5CF6"
@@ -292,7 +292,7 @@ const Reports: React.FC = () => {
                       <div>
                         <div className="flex justify-between mb-1 text-sm">
                           <span className="text-gray-600">Revenue</span>
-                          <span className="font-medium">₱{room.revenue.toLocaleString()}</span>
+                          <span className="font-medium">{hotelInfo?.currency_symbol}{room.revenue.toLocaleString()}</span>
                         </div>
                         <div className="bg-gray-200 rounded-full w-full h-2">
                           <div 
@@ -308,7 +308,7 @@ const Reports: React.FC = () => {
                       <div className="flex justify-between text-sm">
                         <span className="text-gray-600">Avg. Rate</span>
                         <span className="font-medium">
-                          ₱{room.count > 0 ? Math.round(room.revenue / room.count).toLocaleString() : '0'}
+                          {hotelInfo?.currency_symbol}{room.count > 0 ? Math.round(room.revenue / room.count).toLocaleString() : '0'}
                         </span>
                       </div>
                     </div>
@@ -329,13 +329,13 @@ const Reports: React.FC = () => {
                       tickLine={false}
                     />
                     <YAxis 
-                      tickFormatter={(value) => `₱${value}`}
+                      tickFormatter={(value) => `${hotelInfo?.currency_symbol}${value}`}
                       tick={{ fontSize: 12 }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip 
-                      formatter={(value, name) => [`₱${value?.toLocaleString()}`, 'Revenue']}
+                      formatter={(value, name) => [`${hotelInfo?.currency_symbol}${value?.toLocaleString()}`, 'Revenue']}
                       contentStyle={{
                         backgroundColor: '#ffffff',
                         border: '1px solid #e5e7eb',
@@ -408,7 +408,7 @@ const Reports: React.FC = () => {
                 <div className="flex justify-between items-center bg-gradient-to-r from-[#008ea2] to-[#006b7a] p-4 rounded-lg text-white">
                   <div>
                     <p className="opacity-90 text-sm">Revenue per Available Room (RevPAR)</p>
-                    <p className="font-bold text-2xl">₱{computedData?.revPAR || 0}</p>
+                    <p className="font-bold text-2xl">{hotelInfo?.currency_symbol}{computedData?.revPAR || 0}</p>
                   </div>
                   <DollarSign className="opacity-80 w-8 h-8" />
                 </div>

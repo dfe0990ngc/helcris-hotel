@@ -1,10 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, AuthState } from '../types';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { User, AuthState, HotelInfo } from '../types';
 
 import { 
   login as apiLogin, 
   logout as apiLogout,
   register as apiRegister,
+  info
 } from '../api/api.js';
 
 import toast from 'react-hot-toast';
@@ -15,11 +16,24 @@ interface AuthContextType extends AuthState {
   logout: () => void;
   setLoading: ( flg: boolean ) => void;
   setUser: (User: User) => void;
+  hotelInfo: HotelInfo;
+  fetchInfo: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const infoRef = useRef(null);
+  const [hotelInfo, setHotelInfo] = useState<HotelInfo>({
+    hotel_name: '',
+    currency: '',
+    currency_symbol: '',
+    hotel_address: '',
+    phone: '',
+    email: '',
+    check_in: '',
+    check_out: '',
+  });
 
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
@@ -29,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Check for stored auth data
+    const storedInfo = localStorage.getItem('hotelInfo');
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
     
@@ -41,7 +56,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else {
       setAuthState(prev => ({ ...prev, loading: false }));
     }
+
+    if(storedInfo){
+      setHotelInfo(JSON.parse(storedInfo));
+    }else{
+      if(!infoRef.current){
+        infoRef.current = true;
+        fetchInfo();
+      }
+    }
   }, []);
+
+  const fetchInfo = async () => {
+    try{
+      const { data } = await info();
+
+      setHotelInfo(data);
+      localStorage.setItem('hotelInfo', JSON.stringify(data));
+    }catch(error){
+      console.log(error);
+
+      setHotelInfo({
+        hotel_name: 'HelCris Hotel',
+        currency: 'PHP',
+        currency_symbol: '₱',
+        hotel_address: 'Digos City',
+        phone: '',
+        email: '',
+        check_in: '15:00',
+        check_out: '11:00',
+      });
+    }
+  }
 
   const login = async (email: string, password: string) => {
     try {
@@ -115,7 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   return (
-    <AuthContext.Provider value={{ ...authState, login, register, logout, setLoading, setUser }}>
+    <AuthContext.Provider value={{ ...authState, login, register, logout, setLoading, setUser, hotelInfo, fetchInfo }}>
       {children}
     </AuthContext.Provider>
   );

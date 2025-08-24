@@ -1,5 +1,5 @@
 // LandingPage.tsx
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Coffee, 
@@ -13,8 +13,20 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import Logo2 from '../components/Common/Logo2';
+import { useAuth } from '../context/AuthContext';
 
 const LandingPage: React.FC = () => {
+  const { hotelInfo, fetchInfo } = useAuth();
+  const infoRef = useRef(null);
+
+  // Make sure to update hotel information
+  useEffect(() => {
+    if(!infoRef.current){
+      infoRef.current = true;
+      fetchInfo();
+    }
+  },[]);
+
   const amenities = [
     {
       icon: BedDouble,
@@ -87,7 +99,7 @@ const LandingPage: React.FC = () => {
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex justify-between items-center h-16">
             <div>
-              <Logo2 />
+              <Logo2 hotelName={hotelInfo?.hotel_name || 'HelCris Hotel'} />
             </div>
             <div className="flex justify-end items-center space-x-4">
               <Link 
@@ -115,7 +127,7 @@ const LandingPage: React.FC = () => {
               <div className="space-y-4">
                 <h1 className="font-bold text-gray-900 text-5xl lg:text-6xl leading-tight">
                   Welcome to 
-                  <span className="bg-clip-text bg-gradient-to-r from-[#008ea2] to-[#006b7a] text-transparent"> HelCris Hotel</span>
+                  <span className="bg-clip-text bg-gradient-to-r from-[#008ea2] to-[#006b7a] text-transparent"> {hotelInfo?.hotel_name || 'HelCris Hotel'}</span>
                 </h1>
                 <p className="text-gray-600 text-xl leading-relaxed">
                   Where comfort meets elegance. Enjoy world-class service, modern amenities, and a truly relaxing stay designed around you.
@@ -203,7 +215,7 @@ const LandingPage: React.FC = () => {
               Explore Our Spaces
             </h2>
             <p className="text-gray-600 text-xl">
-              Take a glimpse at the beauty and elegance that awaits you at HelCris Hotel.
+              Take a glimpse at the beauty and elegance that awaits you at {hotelInfo?.hotel_name || 'HelCris Hotel'}.
             </p>
           </div>
 
@@ -267,7 +279,7 @@ const LandingPage: React.FC = () => {
           </h2>
           
           <p className="mb-8 text-white/90 text-xl leading-relaxed">
-            Whether for business or leisure, <span className="font-semibold">HelCris Hotel</span> is your sanctuary of comfort, elegance, and world-class hospitality.
+            Whether for business or leisure, <span className="font-semibold">{hotelInfo?.hotel_name || 'HelCris Hotel'}</span> is your sanctuary of comfort, elegance, and world-class hospitality.
           </p>
           
           <Link 
@@ -285,13 +297,13 @@ const LandingPage: React.FC = () => {
         <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex md:flex-row flex-col justify-between items-center">
             <div className="mb-8 md:mb-0">
-              <Logo2 className="mb-4" />
+              <Logo2 className="mb-4" hotelName={hotelInfo?.hotel_name || 'HelCris Hotel'} />
               <p className="max-w-md text-gray-400">
-                HelCris Hotel – Where every stay feels like home, blending modern comfort with timeless hospitality.
+                {hotelInfo?.hotel_name || 'HelCris Hotel'} – Where every stay feels like home, blending modern comfort with timeless hospitality.
               </p>
             </div>
             <div className="text-center md:text-right">
-              <p className="mb-2 text-gray-400">© 2025 HelCris Hotel</p>
+              <p className="mb-2 text-gray-400">© 2025 {hotelInfo?.hotel_name || 'HelCris Hotel'}</p>
               <p className="text-gray-500 text-sm">All rights reserved.</p>
             </div>
           </div>

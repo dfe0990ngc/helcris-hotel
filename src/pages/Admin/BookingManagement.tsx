@@ -17,7 +17,7 @@ const BookingManagement: React.FC = () => {
 
   const [statusUpdating,setStatusUpdating] = useState(false);
 
-  const { logout } = useAuth();
+  const { logout, hotelInfo } = useAuth();
   const bookingsRef = useRef(null);
 
   useEffect(() => {
@@ -259,7 +259,7 @@ const BookingManagement: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900 text-sm">₱{booking.total_amount}</div>
+                    <div className="font-medium text-gray-900 text-sm">{hotelInfo?.currency_symbol}{booking.total_amount}</div>
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getPaymentStatusColor(booking.payment_status)}`}>
                       {booking.payment_status}
                     </span>
@@ -352,7 +352,7 @@ const BookingManagement: React.FC = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600 text-sm">Total Amount:</span>
-                      <span className="font-medium text-[#008ea2] text-sm">₱{selectedBooking.total_amount}</span>
+                      <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{selectedBooking.total_amount}</span>
                     </div>
                   </div>
                 </div>

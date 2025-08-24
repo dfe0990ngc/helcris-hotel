@@ -10,7 +10,7 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, hotelInfo } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
         
         <div className="mb-8 text-center">
           <Logo/>
-          <h1 className="font-bold text-gray-900 text-3xl">PCDS - HelCris Hotel</h1>
+          <h1 className="font-bold text-gray-900 text-3xl">{hotelInfo?.hotel_name || 'HelCris Hotel'}</h1>
           <p className="mt-2 text-gray-600">Sign in to your account</p>
         </div>
 

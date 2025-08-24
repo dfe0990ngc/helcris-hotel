@@ -5,7 +5,7 @@ import { useNav } from '../../context/NavContext';
 import { useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
-  const { user, logout, setLoading } = useAuth();
+  const { user, logout, setLoading, hotelInfo } = useAuth();
   const { isShowNav, showNav} = useNav();
 
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const Header: React.FC = () => {
             { isShowNav && <ArrowLeft onClick={() => showNav(false)} className="w-5 h-5 font-bold text-[#008ea2] text-2xl transition-all duration-300 cursor-pointer" /> }
             { !isShowNav && <ArrowRight onClick={() => showNav(true)} className="w-5 h-5 font-bold text-[#008ea2] text-2xl transition-all duration-300 cursor-pointer" /> }
 
-            <h1 className="font-bold text-[#008ea2] text-2xl whitespace-nowrap"><strong className="hidden sm:inline">PCDS - </strong>HelCris Hotel</h1>
+            <h1 className="font-bold text-[#008ea2] text-2xl whitespace-nowrap"><strong className="hidden sm:inline">PCDS - </strong>{hotelInfo?.hotel_name || 'HelCris Hotel'}</h1>
           </div>
           
           <div className="flex items-center space-x-1">

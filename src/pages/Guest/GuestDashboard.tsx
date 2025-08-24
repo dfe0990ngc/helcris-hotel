@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom';
 import { guestRooms, guestBookings } from '../../api/api.js';
 import { useAuth } from '../../context/AuthContext';
-import { Booking, Room } from '../../types';
+import { Booking, HotelInfo, Room } from '../../types';
 import LoadingSpinner from '../../components/Common/LoadingSpinner';
 import { 
   Calendar, 
@@ -29,7 +29,7 @@ interface DashboardState {
 }
 
 const GuestDashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user, hotelInfo } = useAuth();
   const [state, setState] = useState<DashboardState>({
     bookings: [],
     featuredRooms: [],
@@ -266,6 +266,7 @@ const GuestDashboard: React.FC = () => {
                 <BookingCard 
                   key={booking.id} 
                   booking={booking} 
+                  hotelInfo={hotelInfo}
                   getStatusColor={getBookingStatusColor}
                   getStatusIcon={getBookingStatusIcon}
                   priority={true}
@@ -282,6 +283,7 @@ const GuestDashboard: React.FC = () => {
                   <BookingCard 
                     key={booking.id} 
                     booking={booking} 
+                    hotelInfo={hotelInfo}
                     getStatusColor={getBookingStatusColor}
                     getStatusIcon={getBookingStatusIcon}
                   />
@@ -301,6 +303,7 @@ const GuestDashboard: React.FC = () => {
                     <BookingCard 
                       key={booking.id} 
                       booking={booking} 
+                      hotelInfo={hotelInfo}
                       getStatusColor={getBookingStatusColor}
                       getStatusIcon={getBookingStatusIcon}
                     />
@@ -317,7 +320,7 @@ const GuestDashboard: React.FC = () => {
           
           <div className="space-y-4">
             {state.featuredRooms.map((room) => (
-              <FeaturedRoomCard key={room.id} room={room} />
+              <FeaturedRoomCard key={room.id} room={room} hotelInfo={hotelInfo} />
             ))}
           </div>
           
@@ -367,10 +370,11 @@ const GuestDashboard: React.FC = () => {
 // Extracted Components for Better Organization and Performance
 const BookingCard: React.FC<{
   booking: Booking;
+  hotelInfo: HotelInfo,
   getStatusColor: (status: Booking['status']) => string;
   getStatusIcon: (status: Booking['status']) => React.ReactNode;
   priority?: boolean;
-}> = React.memo(({ booking, getStatusColor, getStatusIcon, priority = false }) => (
+}> = React.memo(({ booking, hotelInfo, getStatusColor, getStatusIcon, priority = false }) => (
   <div className={`bg-white shadow-sm p-6 border border-gray-200 rounded-lg transition-all duration-200 hover:shadow-md ${priority ? 'ring-2 ring-blue-200' : ''}`}>
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center space-x-3">
@@ -381,7 +385,7 @@ const BookingCard: React.FC<{
           <h3 className="font-semibold text-gray-900">
             Room {booking.room?.number} - {booking.room?.type}
           </h3>
-          <p className="text-gray-500 text-sm">Booking #{booking.id}</p>
+          <p className="text-gray-500 text-sm">Booking {booking.code}</p>
         </div>
       </div>
       <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(booking.status)}`}>
@@ -403,7 +407,7 @@ const BookingCard: React.FC<{
       </div>
       <div>
         <p className="mb-1 text-gray-500">Total Amount</p>
-        <p className="font-bold text-[#008ea2] text-lg">₱{booking.total_amount}</p>
+        <p className="font-bold text-[#008ea2] text-lg">{hotelInfo?.currency_symbol}{booking.total_amount}</p>
       </div>
     </div>
     
@@ -417,7 +421,7 @@ const BookingCard: React.FC<{
   </div>
 ));
 
-const FeaturedRoomCard: React.FC<{ room: Room }> = React.memo(({ room }) => (
+const FeaturedRoomCard: React.FC<{ room: Room, hotelInfo: HotelInfo }> = React.memo(({ room, hotelInfo }) => (
   <div className="bg-white shadow-sm hover:shadow-md border border-gray-200 rounded-lg overflow-hidden transition-all duration-200">
     <div className="relative bg-gray-200 h-32 overflow-hidden">
       {room.images && room.images[0] ? (
@@ -433,7 +437,7 @@ const FeaturedRoomCard: React.FC<{ room: Room }> = React.memo(({ room }) => (
         </div>
       )}
       <div className="top-2 right-2 absolute bg-white bg-opacity-95 shadow-sm px-2 py-1 rounded-full">
-        <span className="font-bold text-[#008ea2] text-sm">₱{room.price_per_night}/night</span>
+        <span className="font-bold text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{room.price_per_night}/night</span>
       </div>
       {room.rating && (
         <div className="top-2 left-2 absolute flex items-center space-x-1 bg-white bg-opacity-95 shadow-sm px-2 py-1 rounded-full">

@@ -49,7 +49,7 @@ const RoomManagement: React.FC = () => {
 
   const [statusFilter,setStatusFilter] = useState('');
 
-  const { logout } = useAuth();
+  const { logout, hotelInfo } = useAuth();
 
   const [formData, setFormData] = useState({
     number: '',
@@ -268,7 +268,7 @@ const RoomManagement: React.FC = () => {
             <div className="p-6">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-semibold text-gray-900 text-lg">Room {room.number}</h3>
-                <span className="font-bold text-[#008ea2] text-2xl">₱{room.price_per_night}</span>
+                <span className="font-bold text-[#008ea2] text-2xl">{hotelInfo?.currency_symbol}{room.price_per_night}</span>
               </div>
               
               <p className="mb-4 text-gray-600 text-sm">{room.description}</p>
@@ -372,7 +372,7 @@ const RoomManagement: React.FC = () => {
               <div className="gap-4 grid grid-cols-2">
                 <div>
                   <label className="block mb-1 font-medium text-gray-700 text-sm">
-                    Price per Night (₱)
+                    Price per Night ({hotelInfo?.currency_symbol})
                   </label>
                   <input
                     type="number"

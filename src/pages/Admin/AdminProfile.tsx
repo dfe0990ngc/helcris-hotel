@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { updateUserProfile, updateUserImage, updateUserPassword } from '../../api/api.js';
 
 const AdminProfile: React.FC = () => {
-  const { user, loading, setLoading, setUser } = useAuth();
+  const { user, loading, setLoading, setUser, hotelInfo } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -315,7 +315,7 @@ const AdminProfile: React.FC = () => {
             </div>
             
             <div className="bg-green-100 p-4 rounded-lg text-center">
-              <div className="font-bold text-green-600 text-2xl">₱{(+user?.total_spent).toFixed(2)}</div>
+              <div className="font-bold text-green-600 text-2xl">{hotelInfo?.currency_symbol}{(+user?.total_spent).toFixed(2)}</div>
               <div className="text-gray-600 text-sm">Total Spent</div>
             </div>
             

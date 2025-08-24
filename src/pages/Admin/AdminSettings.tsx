@@ -40,7 +40,7 @@ const AdminSettings: React.FC = () => {
     }
   });
 
-  const { loading, setLoading } = useAuth();
+  const { loading, setLoading, fetchInfo } = useAuth();
   const settingsRef = useRef(null);
 
   const [showSMTPSetting, setShowSMTPSetting] = useState(false);
@@ -163,6 +163,8 @@ const AdminSettings: React.FC = () => {
       });
 
       toast.success(data?.message || 'Settings saved successfully');
+
+      fetchInfo();
     }catch(error){
       toast.error(error?.response?.data?.message || 'Failed to update settings!');
     }finally{

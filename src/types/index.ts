@@ -11,6 +11,17 @@ export interface User {
   profile_url: string;
 }
 
+export interface HotelInfo {
+  hotel_name: string,
+  currency: string,
+  currency_symbol: string,
+  hotel_address: string,
+  phone: string,
+  email: string,
+  check_in: string,
+  check_out: string,
+}
+
 export interface Room {
   id: number;
   number: string;

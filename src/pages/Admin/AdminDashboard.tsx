@@ -177,7 +177,7 @@ const AdminDashboard = () => {
   const [timeRange, setTimeRange] = useState('1year');
   const [refreshing, setRefreshing] = useState(false);
 
-  const { logout } = useAuth();
+  const { logout, hotelInfo } = useAuth();
   const abortControllerRef = useRef(null);
 
   // Memoized fetch function with proper error handling
@@ -368,7 +368,7 @@ const AdminDashboard = () => {
           <div className="gap-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
             <StatCard
               title="Total Revenue"
-              value={`₱${report.total_revenue?.toLocaleString() || '0'}`}
+              value={`${hotelInfo?.currency_symbol}${report.total_revenue?.toLocaleString() || '0'}`}
               icon={DollarSign}
               trend={dashboardData?.revenueTrend}
               color="#008ea2"
@@ -389,7 +389,7 @@ const AdminDashboard = () => {
             />
             <StatCard
               title="Average Daily Rate"
-              value={`₱${report.average_daily_rate?.toLocaleString() || '0'}`}
+              value={`${hotelInfo?.currency_symbol}${report.average_daily_rate?.toLocaleString() || '0'}`}
               icon={TrendingUp}
               trend={dashboardData?.adrTrend}
               color="#8B5CF6"
@@ -405,7 +405,7 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <p className="opacity-90 font-medium text-sm">RevPAR (Revenue per Available Room)</p>
-                  <p className="font-bold text-2xl">₱{dashboardData?.revPAR}</p>
+                  <p className="font-bold text-2xl">{hotelInfo?.currency_symbol}{dashboardData?.revPAR}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -455,13 +455,13 @@ const AdminDashboard = () => {
                     tickLine={false}
                   />
                   <YAxis 
-                    tickFormatter={(value) => `₱${(value/1000).toFixed(0)}k`}
+                    tickFormatter={(value) => `${hotelInfo?.currency_symbol}${(value/1000).toFixed(0)}k`}
                     tick={{ fontSize: 12 }}
                     axisLine={false}
                     tickLine={false}
                   />
                   <Tooltip 
-                    formatter={(value) => [`₱${value?.toLocaleString()}`, 'Revenue']}
+                    formatter={(value) => [`${hotelInfo?.currency_symbol}${value?.toLocaleString()}`, 'Revenue']}
                     contentStyle={{
                       backgroundColor: '#ffffff',
                       border: '1px solid #e5e7eb',
@@ -498,7 +498,7 @@ const AdminDashboard = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900">₱{room.revenue?.toLocaleString()}</p>
+                      <p className="font-semibold text-gray-900">{hotelInfo?.currency_symbol}{room.revenue?.toLocaleString()}</p>
                       <p className="text-gray-600 text-sm">{room.percentage}% of total</p>
                     </div>
                   </div>

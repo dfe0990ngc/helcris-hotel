@@ -24,7 +24,7 @@ const amenityIcons: { [key: string]: React.ComponentType<{ className?: string }>
 };
 
 const RoomBrowsing: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, hotelInfo } = useAuth();
   const navigate = useNavigate();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
@@ -146,7 +146,7 @@ const RoomBrowsing: React.FC = () => {
                 </span>
               </div>
               <div className="top-4 right-4 absolute bg-white bg-opacity-95 px-3 py-1 rounded-full">
-                <span className="font-bold text-[#008ea2] text-lg">₱{room.price_per_night}</span>
+                <span className="font-bold text-[#008ea2] text-lg">{hotelInfo?.currency_symbol}{room.price_per_night}</span>
                 <span className="text-gray-600 text-sm">/night</span>
               </div>
             </div>
@@ -213,7 +213,7 @@ const RoomBrowsing: React.FC = () => {
               <div className="flex justify-between items-center mb-2">
                 <h3 className="font-medium text-gray-900">{selectedRoom.type} Room</h3>
                 <span className="font-bold text-[#008ea2] text-lg">
-                  ₱{selectedRoom.price_per_night}/night
+                  {hotelInfo?.currency_symbol}{selectedRoom.price_per_night}/night
                 </span>
               </div>
               <p className="text-gray-600 text-sm">{selectedRoom.description}</p>
@@ -301,13 +301,13 @@ const RoomBrowsing: React.FC = () => {
                 <h4 className="mb-2 font-medium text-gray-900">Booking Summary</h4>
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <span>Room Rate (₱{selectedRoom.price_per_night} × {nights} nights)</span>
-                    <span>₱{selectedRoom.price_per_night * nights}</span>
+                    <span>Room Rate ({hotelInfo?.currency_symbol}{selectedRoom.price_per_night} × {nights} nights)</span>
+                    <span>{hotelInfo?.currency_symbol}{selectedRoom.price_per_night * nights}</span>
                   </div>
                   <div className="mt-2 pt-1 border-t">
                     <div className="flex justify-between font-medium">
                       <span>Total Amount</span>
-                      <span className="text-[#008ea2]">₱{totalAmount}</span>
+                      <span className="text-[#008ea2]">{hotelInfo?.currency_symbol}{totalAmount}</span>
                     </div>
                   </div>
                 </div>
