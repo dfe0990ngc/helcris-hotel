@@ -1,4 +1,4 @@
-# PCDS - HelCris Hotel
+# PCDS - HILLCREST Suites
 
 This is a sample web application for frontliner students specifically at Polytechnic College of Davao del Sur.
 

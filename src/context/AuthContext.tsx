@@ -68,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   useEffect(() => {
-    document.title = 'PCDS - '+(hotelInfo?.hotel_name || "HILL CREST SUITES");
+    document.title = 'PCDS - '+(hotelInfo?.hotel_name || "HILLCREST Suites");
   },[hotelInfo]);
 
   const fetchInfo = async () => {
