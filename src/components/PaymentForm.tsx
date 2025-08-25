@@ -9,16 +9,17 @@ interface PaymentData {
   paymentReference: string;
   paymentDate: string;
   notes: string;
-  receiptImage: File | null;
+  receipt_url: string;
 }
 
 interface PaymentFormProps {
   onSubmit: (paymentData: PaymentData) => void;
+  onCancel?: () => null;
   loading?: boolean;
   currencySymbol?: string;
 }
 
-export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, loading = false, currencySymbol = "₱" }) => {
+export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, onCancel, loading = false, currencySymbol = "₱" }) => {
   const [formData, setFormData] = useState<PaymentData>({
     bookingCode: '',
     guestName: '',
@@ -27,8 +28,10 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, loading = fa
     paymentReference: '',
     paymentDate: new Date().toISOString().split('T')[0],
     notes: '',
-    receiptImage: null
+    receipt_url: ''
   });
+
+  const [processing, setProcessing] = useState(false);
 
   const [dragActive, setDragActive] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -38,14 +41,15 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, loading = fa
   };
 
   const handleImageUpload = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
-      setFormData(prev => ({ ...prev, receiptImage: file }));
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
+    handleUpload(file);
+    // if (file && file.type.startsWith('image/')) {
+    //   setFormData(prev => ({ ...prev, receiptImage: file }));
+    //   const reader = new FileReader();
+    //   reader.onload = (e) => {
+    //     setImagePreview(e.target?.result as string);
+    //   };
+    //   reader.readAsDataURL(file);
+    // }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -81,10 +85,54 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, loading = fa
     onSubmit(formData);
   };
 
+  const handleUpload = async (file?: File) => {
+      if (!file) return;
+  
+      // Restrict file size < 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size must be less than 5MB");
+        return;
+      }
+  
+      setProcessing(true);
+  
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "hillcrest-suites-images"); // from Cloudinary
+  
+      try {
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/dkt49dvgv/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+  
+        const data = await res.json();
+  
+        if (data.secure_url) {
+          // Generate optimized URL with f_auto & q_auto
+          const optimizedUrl = data.secure_url.replace(
+            "/upload/",
+            "/upload/f_auto,q_auto/"
+          );
+          setFormData((prev) => ({...prev, receipt_url: optimizedUrl}));
+        } else {
+          alert("Upload failed, please try again.");
+        }
+      } catch (err) {
+        console.error("Upload failed", err);
+        alert("Something went wrong while uploading.");
+      }finally{
+        setProcessing(false);
+      }
+    };
+
   return (
-    <div className="bg-white shadow-sm border border-gray-200 rounded-lg">
+    <div className="bg-white shadow-sm">
       {/* Header */}
-      <div className="bg-gradient-to-r from-[#008ea2] to-[#006b7a] px-6 py-4 rounded-t-lg text-white">
+      <div className="bg-gradient-to-r from-[#008ea2] to-[#006b7a] px-6 py-4 text-white">
         <div className="flex items-center space-x-2">
           <CreditCard className="w-5 h-5" />
           <h2 className="font-semibold text-lg">Payment Collection</h2>
@@ -250,7 +298,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, loading = fa
                 <img
                   src={imagePreview}
                   alt="Receipt preview"
-                  className="mx-auto border border-gray-300 rounded-lg w-full max-w-md"
+                  className="mx-auto border border-gray-300 rounded-lg w-full max-w-md object-cover"
                 />
                 <button
                   type="button"
@@ -284,18 +332,19 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, loading = fa
 
           {/* Submit Button */}
           <div className="flex justify-end space-x-3 pt-4 border-gray-200 border-t">
-            <button
+            <button onClick={onCancel}
               type="button"
-              className="hover:bg-gray-50 px-6 py-2 border border-gray-300 rounded-md text-gray-700 transition-colors"
+              disabled={processing}
+              className={`hover:bg-gray-50 px-6 py-2 border border-gray-300 rounded-md text-gray-700 transition-colors ${processing ? 'cursor-not-allowed opacity-80' : ''}`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={loading}
-              className="bg-[#008ea2] hover:bg-[#006b7a] disabled:opacity-50 px-6 py-2 rounded-md text-white transition-colors disabled:cursor-not-allowed"
+              disabled={loading || processing}
+              className={`bg-[#008ea2] hover:bg-[#006b7a] disabled:opacity-50 px-6 py-2 rounded-md text-white transition-colors disabled:cursor-not-allowed ${processing ? 'cursor-not-allowed opacity-80' : ''}`}
             >
-              {loading ? 'Processing...' : 'Record Payment'}
+              {(loading || processing) ? 'Processing...' : 'Record Payment'}
             </button>
           </div>
         </form>

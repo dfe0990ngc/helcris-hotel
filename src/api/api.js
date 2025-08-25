@@ -122,6 +122,10 @@ export const updateUserPassword = async (userId, data) => { return put(`api/admi
 export const settings = async () => { return get('api/admin/settings') ;}
 export const updateSettings = async (settingId, data) => { return put(`api/admin/settings/${settingId}`,data) ;}
 
+// Payment Collections
+export const paymentAnalytics = async(data) => { return get(`api/admin/payment-analytics?time_range=${data.time_range}`); }
+
+
 // ==================================================
 // Guest APIs
 // ==================================================

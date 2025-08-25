@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Calendar, DollarSign, CreditCard, CheckCircle, Clock, AlertTriangle, Eye, Download } from 'lucide-react';
+import { Search, Calendar, DollarSign, CreditCard, CheckCircle, Clock, AlertTriangle, Eye, Download, PlusCircle } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface Payment {
@@ -20,13 +20,15 @@ interface PaymentHistoryProps {
   currencySymbol?: string;
   onViewReceipt?: (payment: Payment) => void;
   onExportData?: () => void;
+  onAddNewPayment?: () => null;
 }
 
 export const PaymentHistory: React.FC<PaymentHistoryProps> = ({
   payments,
   currencySymbol = '$',
   onViewReceipt,
-  onExportData
+  onExportData,
+  onAddNewPayment
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -67,14 +69,14 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({
     <div className="bg-white shadow-sm border border-gray-200 rounded-lg">
       {/* Header */}
       <div className="px-6 py-4 border-gray-200 border-b">
-        <div className="flex sm:flex-row flex-col justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+        <div className="flex sm:flex-row flex-col justify-between items-start sm:items-center space-y-4 sm:space-y-0 bg-gradient-to-r from-[#008ea2] to-[#006b7a] px-6 py-4 rounded-t-lg text-white">
           <div>
-            <h2 className="font-semibold text-gray-900 text-lg">Payment History</h2>
-            <p className="mt-1 text-gray-600 text-sm">
+            <h2 className="font-semibold text-lg">Payment History</h2>
+            <p className="mt-1 text-sm">
               {filteredPayments.length} payments • Total: {currencySymbol}{totalAmount.toLocaleString()}
             </p>
           </div>
-          {onExportData && (
+          {/* {onExportData && (
             <button
               onClick={onExportData}
               className="inline-flex items-center hover:bg-[#008ea2] px-3 py-2 border border-[#008ea2] rounded-md text-[#008ea2] hover:text-white text-sm transition-colors"
@@ -82,7 +84,15 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({
               <Download className="mr-2 w-4 h-4" />
               Export
             </button>
-          )}
+          )} */}
+
+          <button
+              onClick={onAddNewPayment}
+              className="inline-flex items-center hover:bg-gray-700 px-3 py-2 border border-gray-200 rounded-md text-gray-100 hover:text-gray-300 text-sm transition-colors"
+            >
+              <PlusCircle className="mr-2 w-4 h-4" />
+              Add New Payment
+            </button>
         </div>
       </div>
 

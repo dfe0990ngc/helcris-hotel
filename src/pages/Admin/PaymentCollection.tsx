@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CreditCard, TrendingUp } from 'lucide-react';
 import PaymentStats from '../../components/PaymentStats';
 import PaymentForm from '../../components/PaymentForm';
@@ -6,6 +6,7 @@ import PaymentHistory from '../../components/PaymentHistory';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from 'recharts';
 import { useAuth } from '../../context/AuthContext';
+import { paymentAnalytics } from '../../api/api.js';
 
 // Mock data - replace with real data from your API
 const mockStats = {
@@ -54,16 +55,6 @@ const mockPayments = [
   }
 ];
 
-const dailyRevenueData = [
-  { date: 'Jan 10', revenue: 2400 },
-  { date: 'Jan 11', revenue: 1800 },
-  { date: 'Jan 12', revenue: 3200 },
-  { date: 'Jan 13', revenue: 2800 },
-  { date: 'Jan 14', revenue: 3600 },
-  { date: 'Jan 15', revenue: 4200 },
-  { date: 'Jan 16', revenue: 3800 },
-];
-
 const paymentMethodData = [
   { method: 'Credit Card', count: 45, percentage: 52 },
   { method: 'Cash', count: 25, percentage: 29 },
@@ -72,9 +63,45 @@ const paymentMethodData = [
 ];
 
 const PaymentCollection: React.FC = () => {
-  const [loading, setLoading] = useState(false);
 
-  const { hotelInfo } = useAuth();
+  const [timeRange, setTimeRange] = useState('6months');
+  const [analytics, setAnalytics] = useState(null);
+  const analyticRef = useRef(null);
+
+  const [showAddPayment, setShowAddPayment] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    if(!analyticRef.current){
+      analyticRef.current = true;
+      fetchAnalytics();
+    }
+  },[]);
+
+  const  handleTimeRangeChange = () => {
+    fetchAnalytics();
+  }
+
+  const { hotelInfo, loading, setLoading } = useAuth();
+
+  const fetchAnalytics = async () => {
+    setLoading(true);
+
+    try{
+      const { data } = await paymentAnalytics({
+        time_range: timeRange,
+      });
+
+      console.log('MyDATA',data?.data || []);
+
+      setAnalytics(data?.data || []);
+
+    }catch(error){
+      console.log('Failed to fetch analytics data!',error);
+    }finally{
+      setLoading(false);
+    }
+  }
 
   const handlePaymentSubmit = async (paymentData: {
     bookingCode: string;
@@ -139,14 +166,41 @@ const PaymentCollection: React.FC = () => {
             </h1>
             <p className="mt-1 text-gray-600">Manage and track all payment transactions</p>
           </div>
-          <div className="flex items-center space-x-2 text-gray-500 text-sm">
-            <TrendingUp className="w-4 h-4" />
-            <span>Last updated: {new Date().toLocaleTimeString()}</span>
+          <div className="flex justify-between sm:justify-end items-center gap-x-3">
+            <div className="flex items-center space-x-2 text-gray-500 text-sm">
+              <TrendingUp className="w-4 h-4" />
+              <span>Last updated: {new Date().toLocaleTimeString()}</span>
+            </div>
+            <div className="flex space-x-3">
+              <select
+                value={timeRange}
+                onChange={(e) => handleTimeRangeChange(e.target.value)}
+                disabled={loading}
+                className="disabled:opacity-50 px-3 py-2 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#008ea2] focus:ring-2 disabled:cursor-not-allowed"
+              >
+                <option value="1month">Last Month</option>
+                <option value="3months">Last 3 Months</option>
+                <option value="6months">Last 6 Months</option>
+                <option value="1year">Last Year</option>
+              </select>
+            </div>
           </div>
         </div>
 
         {/* Statistics Cards */}
-        <PaymentStats stats={mockStats} currencySymbol={hotelInfo?.currency_symbol || "₱"} />
+        <PaymentStats stats={{
+          totalCollected: +analytics?.total_collected || 0,
+          pendingPayments: +analytics?.pending_payments || 0,
+          successRate: +analytics?.success_rate || 0,
+          avgPaymentTime: analytics?.avg_payment_time || '0',
+          todayCollected: +analytics?.today_collected || 0,
+          thisMonthCollected: +analytics?.this_month_collected || 0,
+
+          totalCollectedTrend: +analytics?.total_collected_trend || {value: 0, isPositive: true},
+          pendingPaymentsTrend: +analytics?.pending_payments_trend || {value: 0, isPositive: true},
+          successRateTrend: +analytics?.success_rate_trend || {value: 0, isPositive: true},
+          avgPaymentTimeTrend: analytics?.avg_payment_time_trend || {value: 0, isPositive: true},
+        }} currencySymbol={hotelInfo?.currency_symbol || "₱"} />
 
         {/* Charts Section */}
         <div className="gap-6 grid grid-cols-1 lg:grid-cols-2">
@@ -157,7 +211,7 @@ const PaymentCollection: React.FC = () => {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={dailyRevenueData}>
+                <AreaChart data={analytics?.daily_revenue || []}>
                   <defs>
                     <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#008ea2" stopOpacity={0.3}/>
@@ -206,7 +260,7 @@ const PaymentCollection: React.FC = () => {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={paymentMethodData} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
+                <BarChart data={analytics?.payment_method_distribution || []} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis 
                     dataKey="method" 
@@ -238,17 +292,29 @@ const PaymentCollection: React.FC = () => {
           </Card>
         </div>
 
-        {/* Payment Form */}
-        <PaymentForm onSubmit={handlePaymentSubmit} loading={loading} currencySymbol={hotelInfo?.currency_symbol || "₱"} />
-
         {/* Payment History */}
         <PaymentHistory 
           payments={mockPayments}
           currencySymbol={hotelInfo?.currency_symbol || "₱"}
           onViewReceipt={handleViewReceipt}
           onExportData={handleExportData}
+          onAddNewPayment={(e) => setShowAddPayment(true)}
         />
       </div>
+
+      {/* Fixed Modal */}
+      {showAddPayment && (
+        <div className="z-50 absolute inset-0 flex justify-center items-start bg-black bg-opacity-50 p-4 object-cover overflow-y-auto">
+          <div className="relative bg-white shadow-xl rounded-lg w-full max-w-2xl h-auto">
+            <PaymentForm 
+              onCancel={() => setShowAddPayment(false)} 
+              onSubmit={handlePaymentSubmit} 
+              loading={loading} 
+              currencySymbol={hotelInfo?.currency_symbol || "₱"} 
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

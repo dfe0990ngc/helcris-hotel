@@ -138,7 +138,7 @@ const AdminSettings: React.FC = () => {
         checkInTime: data.settings.check_in,
         checkOutTime: data.settings.check_out,
         taxRate: data.settings.tax_rate,
-        bcc_emails: data.bcc_emails,
+        bcc_emails: data.settings.bcc_emails,
         notifications: {
           emailBookings: data.settings.notify_new_booking,
           emailCancellations: data.settings.notify_booking_cancellation,
