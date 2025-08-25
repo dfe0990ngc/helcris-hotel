@@ -30,6 +30,7 @@ import ForgotPasswordRequest from './pages/Auth/ForgotPasswordRequest';
 import ResetPassword from './pages/Auth/ResetPassword';
 import AdminProfile from './pages/Admin/AdminProfile';
 import LandingPage from './pages/LandingPage';
+import PaymentCollection from './pages/Admin/PaymentCollection';
 
 const ProtectedRoute: React.FC<{ 
   children: React.ReactNode; 
@@ -93,6 +94,11 @@ const AppContent: React.FC = () => {
           <Route path="/admin/bookings" element={
             <ProtectedRoute requiredRole="admin">
               <BookingManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="/admin/payment-collections" element={
+            <ProtectedRoute requiredRole="admin">
+              <PaymentCollection />
             </ProtectedRoute>
           } />
           <Route path="/admin/users" element={

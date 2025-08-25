@@ -81,7 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log(error);
 
       setHotelInfo({
-        hotel_name: 'HelCris Hotel',
+        hotel_name: 'HILLCREST SUITES',
         currency: 'PHP',
         currency_symbol: '₱',
         hotel_address: 'Digos City',

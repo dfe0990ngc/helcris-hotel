@@ -10,16 +10,18 @@ import {
   Settings,
   Home,
   BookOpen,
+  DollarSign
 } from 'lucide-react';
 import { useNav } from '../../context/NavContext';
 
 const Sidebar: React.FC = () => {
-  const { user } = useAuth();
+  const { user, hotelInfo } = useAuth();
 
   const adminMenuItems = [
     { path: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { path: '/admin/rooms', icon: Bed, label: 'Rooms' },
     { path: '/admin/bookings', icon: Calendar, label: 'Bookings' },
+    { path: '/admin/payment-collections', html: <span className="pr-1 font-light text-2xl">{hotelInfo.currency_symbol || "$"}</span>, label: 'Payment Collections' },
     { path: '/admin/users', icon: Users, label: 'Users' },
     { path: '/admin/reports', icon: BarChart3, label: 'Reports' },
     // { path: '/admin/profile', icon: Users, label: 'Profile' },
@@ -46,7 +48,7 @@ const Sidebar: React.FC = () => {
       <nav className="flex-1 px-4 pb-4">
         <ul className="space-y-2">
           {menuItems.map((item) => {
-            const Icon = item.icon;
+            const Icon = item?.icon || null;
             return (
               <li key={item.path}>
                 <NavLink
@@ -59,7 +61,8 @@ const Sidebar: React.FC = () => {
                     }`
                   }
                 >
-                  <Icon className="w-5 h-5" />
+                  {Icon && <Icon className="w-5 h-5" />}
+                  {!Icon && <>{item?.html}</>}
                   <span>{item.label}</span>
                 </NavLink>
               </li>
