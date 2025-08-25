@@ -6,7 +6,8 @@ import PaymentHistory from '../../components/PaymentHistory';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from 'recharts';
 import { useAuth } from '../../context/AuthContext';
-import { paymentAnalytics } from '../../api/api.js';
+import { paymentAnalytics,createPayment } from '../../api/api.js';
+import toast from 'react-hot-toast';
 
 // Mock data - replace with real data from your API
 const mockStats = {
@@ -111,14 +112,17 @@ const PaymentCollection: React.FC = () => {
     paymentReference: string;
     paymentDate: string;
     notes: string;
-    receiptImage: File | null;
+    receipt_url: File | null;
   }) => {
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      console.log('Payment data:', paymentData);
+      const { data } = await createPayment(paymentData);
+      
+      toast.success(data?.message || 'Payment has been successfully added!');
+
+      fetchAnalytics();
+      
       // You can add toast notifications here if needed
       
       // Here you would typically:

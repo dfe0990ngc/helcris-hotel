@@ -124,6 +124,7 @@ export const updateSettings = async (settingId, data) => { return put(`api/admin
 
 // Payment Collections
 export const paymentAnalytics = async(data) => { return get(`api/admin/payment-analytics?time_range=${data.time_range}`); }
+export const createPayment = async(data) => { return post(`api/admin/payments`,data); }
 
 
 // ==================================================

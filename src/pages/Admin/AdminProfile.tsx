@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { User, Mail, Phone, Calendar, Lock, Save, Edit2 } from 'lucide-react';
 import { format } from 'date-fns';
@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import DirectCloudinaryUpload from '../../components/Common/DirectCloudinaryUpload.js';
 
 import { updateUserProfile, updateUserImage, updateUserPassword } from '../../api/api.js';
+import { deleteCloudinaryImageClientSide, isCloudinaryUrl } from '../../lib/utils.js';
 
 const AdminProfile: React.FC = () => {
   const { user, loading, setLoading, setUser, hotelInfo } = useAuth();
@@ -23,6 +24,13 @@ const AdminProfile: React.FC = () => {
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [showImageUrlModal,setShowImageUrlModal] = useState(false);
   const [saving,setSaving] = useState(false);
+
+  const profileRef = useRef(null);
+  useEffect(() => {
+    if(!profileRef.current){
+      profileRef.current = user?.profile_url;
+    }
+  },[user]);
 
   const handleSave = async () => {
 
@@ -56,6 +64,12 @@ const AdminProfile: React.FC = () => {
       // In a real app, this would make an API call to update the user
       toast.success(data?.message || 'Profile image url has been updated successfully');
 
+      if(isCloudinaryUrl(profileRef.current)){
+        await deleteCloudinaryImageClientSide(profileRef.current);
+
+        profileRef.current = data?.user?.profile_url;
+      }
+      
       setShowImageUrlModal(false);
     }catch(error){
       toast.error(error?.response?.data?.message || 'Failed to update your record profile image url!');

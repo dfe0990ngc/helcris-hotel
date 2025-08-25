@@ -6,6 +6,7 @@ import { Plus, Edit, Trash2, Wifi, Tv, Wind, Bath, Coffee, Car, Utensils, Bed, U
 import toast from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext.js';
 import DirectCloudinaryUpload from '../../components/Common/DirectCloudinaryUpload.js';
+import { deleteCloudinaryImageClientSide } from '../../lib/utils.js';
 
 const amenityIcons: { [key: string]: React.ComponentType<{ className?: string }> } = {
   'WiFi': Wifi,
@@ -135,6 +136,10 @@ const RoomManagement: React.FC = () => {
 
           return room;
         }));
+
+        const oldImage = selectedRoom?.images?.join('');
+
+        deleteCloudinaryImageClientSide(oldImage);
       }
       
       setShowImageUrlModal(false);

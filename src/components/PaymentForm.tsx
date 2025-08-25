@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, CreditCard, DollarSign, Calendar, Image, X, Check } from 'lucide-react';
+import { deleteCloudinaryImageClientSide } from '../lib/utils';
 
 interface PaymentData {
   bookingCode: string;
@@ -30,6 +31,8 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, onCancel, lo
     notes: '',
     receipt_url: ''
   });
+  
+
 
   const [processing, setProcessing] = useState(false);
 
@@ -75,8 +78,10 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, onCancel, lo
     setDragActive(false);
   };
 
-  const removeImage = () => {
-    setFormData(prev => ({ ...prev, receiptImage: null }));
+  const removeImage = async () => {
+    await deleteCloudinaryImageClientSide(imagePreview);
+
+    setFormData(prev => ({ ...prev, receipt_url: null }));
     setImagePreview(null);
   };
 
@@ -118,6 +123,8 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, onCancel, lo
             "/upload/f_auto,q_auto/"
           );
           setFormData((prev) => ({...prev, receipt_url: optimizedUrl}));
+          setImagePreview(optimizedUrl);
+
         } else {
           alert("Upload failed, please try again.");
         }
@@ -286,11 +293,12 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, onCancel, lo
                 />
                 <button
                   type="button"
+                  disabled={processing}
                   onClick={() => document.getElementById('receipt-upload')?.click()}
-                  className="inline-flex items-center hover:bg-[#008ea2] px-4 py-2 border border-[#008ea2] rounded-md text-[#008ea2] hover:text-white transition-colors"
+                  className={`inline-flex items-center hover:bg-[#008ea2] px-4 py-2 border border-[#008ea2] rounded-md text-[#008ea2] hover:text-white transition-colors ${processing ? 'cursor-not-allowed opacity-80' : ''}`}
                 >
                   <Image className="mr-2 w-4 h-4" />
-                  Choose Image
+                  {processing ? ' Uploading...' : 'Choose Image'}
                 </button>
               </div>
             ) : (
