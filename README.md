@@ -40,8 +40,11 @@ Before you begin, ensure you have the following installed:
    npm run dev
    ```
 4. **Create .env file and put the following content**
+   Ask me for the actual content of the following:
    ```bash
-   VITE_API_URL=https://api-helcris.pcds.edu.ph
+   VITE_API_URL=https://api-*******.pcds.edu.ph
+   CLOUDINARY_APIKEY=YOUR_CLOUDINARY_API_KEY
+   CLOUDINARY_SECRET=YOUR_CLOUDINARY_SECRET_KEY
    ```
 
 The development server should now be running! 🎉
@@ -55,7 +58,7 @@ The development server should now be running! 🎉
 
 - HTML, CSS, Tailwindcss
 - React.js
-- API Backend: https://api-helcris.pcds.edu.ph
+- API Backend: https://api-*******.pcds.edu.ph
 
 ## 📦 Project Structure
 
