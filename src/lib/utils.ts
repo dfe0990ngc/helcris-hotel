@@ -55,8 +55,8 @@ export const deleteCloudinaryImageClientSide = async (imageUrl: string): Promise
     // WARNING: This exposes your API credentials on the client-side
     // Only use this for development or if you have proper security measures
     const timestamp = Math.round(new Date().getTime() / 1000);
-    const apiKey = '286571625442748'; // Move to environment variables
-    const apiSecret = 'i-wgXbGC3oFWozzwuuhhYohIYc0'; // Move to environment variables
+    const apiKey = import.meta.env.CLOUDINARY_APIKEY; // Move to environment variables
+    const apiSecret = import.meta.env.CLOUDINARY_SECRET; // Move to environment variables
     
     // Create signature for authenticated request
     const stringToSign = `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
