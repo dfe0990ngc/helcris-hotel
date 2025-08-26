@@ -31,6 +31,9 @@ const RoomBrowsing = () => {
   const [loading, setLoading] = useState(true);
   const [availabilityLoading, setAvailabilityLoading] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
+
+  const [tempSelectedRoom, setTempSelectedRoom] = useState(null);
+
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   
@@ -191,6 +194,10 @@ const RoomBrowsing = () => {
 
   const handleBooking = async (room) => {
     // Check individual room availability before booking
+
+    setTempSelectedRoom(room);
+    setAvailabilityLoading(true);
+
     try {
       const { data } = await checkRoomAvailability({
         room_id: room.id,
@@ -206,6 +213,11 @@ const RoomBrowsing = () => {
     } catch (error) {
       toast.error('Error checking room availability');
       return;
+    }finally{
+
+      setAvailabilityLoading(false);
+      setTempSelectedRoom(null);
+
     }
 
     setSelectedRoom(room);
@@ -538,7 +550,7 @@ const RoomBrowsing = () => {
                 onClick={() => handleBooking(room)}
                 disabled={bookingLoading || (roomAvailability[room.id] && !roomAvailability[room.id].available)}
                 className={`flex justify-center items-center space-x-2 py-3 rounded-lg w-full font-medium transition-colors ${
-                  roomAvailability[room.id] && !roomAvailability[room.id].available
+                  ((roomAvailability[room.id] && !roomAvailability[room.id].available) || (availabilityLoading && room.id === tempSelectedRoom.id))
                     ? 'bg-gray-400 cursor-not-allowed text-white'
                     : 'bg-[#008ea2] hover:bg-[#006b7a] text-white'
                 } ${bookingLoading ? 'cursor-not-allowed opacity-80' : ''}`}
@@ -547,8 +559,8 @@ const RoomBrowsing = () => {
                 <span>
                   {roomAvailability[room.id] && !roomAvailability[room.id].available
                     ? 'Not Available'
-                    : bookingLoading
-                    ? 'Processing...'
+                    : (bookingLoading || (availabilityLoading && room.id === tempSelectedRoom.id))
+                    ? 'Checking Availability...'
                     : 'Book Now'
                   }
                 </span>
