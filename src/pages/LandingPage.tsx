@@ -92,6 +92,10 @@ const LandingPage: React.FC = () => {
     }
   ];
 
+  useEffect(() => {
+    document.body.style.overflowY = 'auto';
+  },[]);
+
   return (
     <div className="bg-white min-h-screen">
       {/* Header */}

@@ -340,6 +340,15 @@ const RoomManagement: React.FC = () => {
         ))}
       </div>
 
+      {rooms.length === 0 && (
+        <div className="flex justify-center items-center border-0 border-gray-300 border-t-2 border-dashed w-full">
+          <div className="py-12 text-center">
+            <Bed className="mx-auto mb-4 w-12 h-12 text-gray-400" />
+            <p className="text-gray-500 text-lg">No rooms found</p>
+          </div>
+        </div>
+      )}
+
       {/* Modal */}
       {showModal && (
         <div className="-top-[25px] z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-4">
