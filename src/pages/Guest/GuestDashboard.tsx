@@ -47,7 +47,7 @@ const GuestDashboard: React.FC = () => {
     
       const upcoming = state.bookings.filter(booking =>
         new Date(booking.check_in) > now &&
-        ['pending','confirmed'].includes(booking.status)
+        ['pending'].includes(booking.status)
       );
 
       const current = state.bookings.filter(booking =>
@@ -56,9 +56,13 @@ const GuestDashboard: React.FC = () => {
         ['pending','confirmed','checked_in'].includes(booking.status)
       );
 
+    // const recent = state.bookings.filter(booking => 
+    //   isBefore(new Date(booking.check_out), now) &&
+    //   isAfter(new Date(booking.check_out), addDays(now, -30))
+    // );
+
     const recent = state.bookings.filter(booking => 
-      isBefore(new Date(booking.check_out), now) &&
-      isAfter(new Date(booking.check_out), addDays(now, -30))
+      isBefore(new Date(booking.check_out), now)
     );
 
     return { upcoming, current, recent };

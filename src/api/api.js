@@ -159,4 +159,47 @@ export const guestUpdateUserProfile = async (userId,data) => { return put(`api/g
 export const guestUpdateUserImage = async (userId,data) => { return put(`api/guest/users/${userId}/profile-url`,data); }
 export const guestUpdateUserPassword = async (userId, data) => { return put(`api/guest/users/${userId}/change-password`,data); }
 
+// Room availability checking features
+
+// Check availability for specific date range and criteria
+export const getAvailableRooms = async (params) => {
+  const queryString = new URLSearchParams(params).toString();
+  return get(`api/guest/rooms/available?${queryString}`);
+};
+// Required params: { check_in, check_out, guests?, room_type? }
+
+// Check individual room availability
+export const checkRoomAvailability = async (params) => {
+  const queryString = new URLSearchParams(params).toString();
+  return get(`api/guest/rooms/check-availability?${queryString}`);
+};
+// Required params: { room_id, check_in, check_out }
+
+// Get room availability calendar for a specific room
+export const getRoomAvailabilityCalendar = async (roomId, params) => {
+  const queryString = new URLSearchParams(params).toString();
+  return get(`api/guest/rooms/${roomId}/availability-calendar?${queryString}`);
+};
+// Required params: { month, year }
+
+// Get availability summary for date range
+export const getAvailabilitySummary = async (params) => {
+  const queryString = new URLSearchParams(params).toString();
+  return get(`api/guest/rooms/availability-summary?${queryString}`);
+};
+// Required params: { check_in, check_out }
+
+// Validate booking before creating (real-time availability check)
+export const validateBooking = async (data) => {
+  return post(`api/guest/bookings/validate`, data);
+};
+// Required params: { room_id, check_in, check_out, guests }
+
+// Get similar available rooms (if selected room is not available)
+export const getSimilarRooms = async (params) => {
+  const queryString = new URLSearchParams(params).toString();
+  return get(`api/guest/rooms/similar?${queryString}`);
+};
+// Required params: { room_id, check_in, check_out, guests }
+
 export default api;

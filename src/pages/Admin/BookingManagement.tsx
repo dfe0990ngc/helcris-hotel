@@ -307,8 +307,8 @@ const BookingManagement: React.FC = () => {
 
       {/* Booking Detail Modal */}
       {showModal && selectedBooking && (
-        <div className="-top-[25px] z-50 fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white p-6 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="z-50 absolute inset-0 flex justify-center items-start bg-black bg-opacity-50 p-4 object-cover overflow-y-auto">
+          <div className="relative bg-white shadow-xl p-5 rounded-lg w-full max-w-2xl h-auto">
             <h2 className="mb-4 font-bold text-gray-900 text-xl">
               Booking Details | {selectedBooking.code}
             </h2>
@@ -355,13 +355,13 @@ const BookingManagement: React.FC = () => {
                       <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{selectedBooking.total_amount}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600 text-sm">+ Tax({(+hotelInfo?.tax_rate || 0).toFixed(0)}%):</span>
-                      <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{(selectedBooking.total_amount*(hotelInfo.tax_rate / 100)).toFixed(2)}</span>
+                      <span className="text-gray-600 text-sm">Tax Amount:</span>
+                      <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{(+selectedBooking?.tax_amount).toFixed(2)}</span>
                     </div>
 
                     <div className="flex justify-between pt-3 border-0 border-t border-t-slate-300">
                       <span className="text-gray-600 text-sm">Amount Due:</span>
-                      <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{(selectedBooking.total_amount*(1+hotelInfo.tax_rate / 100)).toFixed(2)}</span>
+                      <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{(+selectedBooking?.total_amount + (+selectedBooking.tax_amount || 0)).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>

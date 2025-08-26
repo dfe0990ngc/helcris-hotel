@@ -47,6 +47,7 @@ export interface Booking {
   check_out: string;
   guests: number;
   total_amount: number;
+  tax_amount: number;
   status: 'pending' | 'confirmed' | 'checked_in' | 'checked_out' | 'cancelled';
   special_requests?: string;
   payment_status: 'pending' | 'paid' | 'refund';
