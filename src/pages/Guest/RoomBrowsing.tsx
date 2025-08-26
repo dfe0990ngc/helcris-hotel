@@ -550,7 +550,7 @@ const RoomBrowsing = () => {
                 onClick={() => handleBooking(room)}
                 disabled={bookingLoading || (roomAvailability[room.id] && !roomAvailability[room.id].available)}
                 className={`flex justify-center items-center space-x-2 py-3 rounded-lg w-full font-medium transition-colors ${
-                  ((roomAvailability[room.id] && !roomAvailability[room.id].available) || (availabilityLoading && room.id === tempSelectedRoom.id))
+                  ((roomAvailability[room.id] && !roomAvailability[room.id].available) || (availabilityLoading && room.id === tempSelectedRoom?.id))
                     ? 'bg-gray-400 cursor-not-allowed text-white'
                     : 'bg-[#008ea2] hover:bg-[#006b7a] text-white'
                 } ${bookingLoading ? 'cursor-not-allowed opacity-80' : ''}`}
@@ -559,7 +559,7 @@ const RoomBrowsing = () => {
                 <span>
                   {roomAvailability[room.id] && !roomAvailability[room.id].available
                     ? 'Not Available'
-                    : (bookingLoading || (availabilityLoading && room.id === tempSelectedRoom.id))
+                    : (bookingLoading || (availabilityLoading && room.id === tempSelectedRoom?.id))
                     ? 'Checking Availability...'
                     : 'Book Now'
                   }
@@ -723,7 +723,7 @@ const RoomBrowsing = () => {
                 {/* Enhanced Booking Summary */}
                 <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-6 border rounded-lg">
                   <h4 className="flex items-center mb-4 font-semibold text-gray-900 text-lg">
-                    <DollarSign className="mr-2 w-5 h-5 text-[#008ea2]" />
+                    <span className="text-[#008ea2] text-2xl">{hotelInfo?.currency_symbol}&nbsp;</span>
                     Booking Summary
                   </h4>
                   
