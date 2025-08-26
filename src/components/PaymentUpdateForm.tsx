@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Upload, CreditCard, DollarSign, Calendar, Image, X, Check } from 'lucide-react';
 import { deleteCloudinaryImageClientSide } from '../lib/utils';
 
 interface PaymentData {
-  id: string;
   booking_code: string;
   guest_name: string;
   amount: string;
@@ -17,30 +16,23 @@ interface PaymentData {
 interface PaymentFormProps {
   onSubmit: (paymentData: PaymentData) => void;
   onCancel?: () => null;
-  onVoid?: (paymentDat: PaymentData) => void;
   loading?: boolean;
   currencySymbol?: string;
-  payment?: PaymentData | null;
 }
 
-export const PaymentForm: React.FC<PaymentFormProps> = ({ onVoid,onSubmit, onCancel, loading = false, currencySymbol = "₱", payment = null }) => {
+export const PaymentForm: React.FC<PaymentFormProps> = ({ onSubmit, onCancel, loading = false, currencySymbol = "₱" }) => {
   const [formData, setFormData] = useState<PaymentData>({
-    id: payment?.id || 0,
-    booking_code: payment?.booking_code || '',
-    guest_name: payment?.guest_name || '',
-    amount: payment?.amount || '0',
-    payment_method: payment?.payment_method || '',
-    payment_reference: payment?.payment_reference || '',
-    payment_date: payment?.payment_date || new Date().toISOString().split('T')[0],
-    notes: payment?.notes || '',
-    receipt_url: payment?.receipt_url || '',
+    booking_code: '',
+    guest_name: '',
+    amount: '',
+    payment_method: '',
+    payment_reference: '',
+    payment_date: new Date().toISOString().split('T')[0],
+    notes: '',
+    receipt_url: ''
   });
   
-  useEffect(() => {
-    if(payment?.receipt_url){
-      setImagePreview(payment?.receipt_url);
-    }
-  },[]);
+
 
   const [processing, setProcessing] = useState(false);
 
@@ -100,14 +92,6 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onVoid,onSubmit, onCan
     onSubmit(formData);
   };
 
-  const handleVoid = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if(window.confirm('Are you sure you want to VOID this payment transaction?')){
-      onVoid(formData);
-    }
-  }
-
   const handleUpload = async (file?: File) => {
       if (!file) return;
   
@@ -160,7 +144,7 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onVoid,onSubmit, onCan
       <div className="bg-gradient-to-r from-[#008ea2] to-[#006b7a] px-6 py-4 text-white">
         <div className="flex items-center space-x-2">
           <CreditCard className="w-5 h-5" />
-          <h2 className="font-semibold text-lg">{+formData?.id > 0 ? 'Edit' : 'New'} Payment Collection</h2>
+          <h2 className="font-semibold text-lg">Payment Collection</h2>
         </div>
       </div>
 
@@ -357,35 +341,22 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({ onVoid,onSubmit, onCan
           </div>
 
           {/* Submit Button */}
-          <div className="flex justify-between gap-8">
-            <div className="flex justify-start space-x-3 pt-4 border-gray-200 border-t">
-              {onVoid && <button onClick={handleVoid}
-                type="button"
-                disabled={processing}
-                className={`bg-orange-600 hover:bg-orange-800 px-6 py-2 border border-gray-300 rounded-md text-gray-100 transition-colors ${processing ? 'cursor-not-allowed opacity-80' : ''}`}
-              >
-                VOID
-              </button>}
-            </div>
-            
-            <div className="flex justify-end space-x-3 pt-4 border-gray-200 border-t">
-              <button onClick={onCancel}
-                type="button"
-                disabled={processing}
-                className={`hover:bg-gray-50 px-6 py-2 border border-gray-300 rounded-md text-gray-700 transition-colors ${processing ? 'cursor-not-allowed opacity-80' : ''}`}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loading || processing}
-                className={`bg-[#008ea2] hover:bg-[#006b7a] disabled:opacity-50 px-6 py-2 rounded-md text-white transition-colors disabled:cursor-not-allowed ${processing ? 'cursor-not-allowed opacity-80' : ''}`}
-              >
-                {(loading || processing) ? 'Processing...' : (payment ? 'Update Record' : 'Record Payment')}
-              </button>
-            </div>
+          <div className="flex justify-end space-x-3 pt-4 border-gray-200 border-t">
+            <button onClick={onCancel}
+              type="button"
+              disabled={processing}
+              className={`hover:bg-gray-50 px-6 py-2 border border-gray-300 rounded-md text-gray-700 transition-colors ${processing ? 'cursor-not-allowed opacity-80' : ''}`}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading || processing}
+              className={`bg-[#008ea2] hover:bg-[#006b7a] disabled:opacity-50 px-6 py-2 rounded-md text-white transition-colors disabled:cursor-not-allowed ${processing ? 'cursor-not-allowed opacity-80' : ''}`}
+            >
+              {(loading || processing) ? 'Processing...' : 'Record Payment'}
+            </button>
           </div>
-
         </form>
       </div>
     </div>

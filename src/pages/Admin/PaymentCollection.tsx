@@ -6,62 +6,8 @@ import PaymentHistory from '../../components/PaymentHistory';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from 'recharts';
 import { useAuth } from '../../context/AuthContext';
-import { paymentAnalytics,createPayment } from '../../api/api.js';
+import { paymentAnalytics,createPayment,payments } from '../../api/api.js';
 import toast from 'react-hot-toast';
-
-// Mock data - replace with real data from your API
-const mockStats = {
-  totalCollected: 45750,
-  pendingPayments: 8920,
-  successRate: 96.5,
-  avgPaymentTime: '2.3 days',
-  todayCollected: 3250,
-  thisMonthCollected: 28900
-};
-
-const mockPayments = [
-  {
-    id: '1',
-    bookingCode: 'BK001',
-    guestName: 'John Smith',
-    amount: 450.00,
-    paymentMethod: 'credit_card',
-    paymentReference: 'CC-2024-001',
-    paymentDate: '2024-01-15',
-    status: 'completed' as const,
-    notes: 'Payment for deluxe room',
-    receiptUrl: '/images/receipt.jpg'
-  },
-  {
-    id: '2',
-    bookingCode: 'BK002',
-    guestName: 'Sarah Johnson',
-    amount: 320.50,
-    paymentMethod: 'cash',
-    paymentReference: 'CASH-001',
-    paymentDate: '2024-01-14',
-    status: 'completed' as const,
-    receiptUrl: '/images/Receipt.jpg'
-  },
-  {
-    id: '3',
-    bookingCode: 'BK003',
-    guestName: 'Mike Wilson',
-    amount: 675.00,
-    paymentMethod: 'bank_transfer',
-    paymentReference: 'TRF-2024-003',
-    paymentDate: '2024-01-13',
-    status: 'pending' as const,
-    notes: 'Awaiting bank confirmation'
-  }
-];
-
-const paymentMethodData = [
-  { method: 'Credit Card', count: 45, percentage: 52 },
-  { method: 'Cash', count: 25, percentage: 29 },
-  { method: 'Bank Transfer', count: 12, percentage: 14 },
-  { method: 'Mobile Pay', count: 4, percentage: 5 },
-];
 
 const PaymentCollection: React.FC = () => {
 
@@ -93,8 +39,6 @@ const PaymentCollection: React.FC = () => {
         time_range: timeRange,
       });
 
-      console.log('MyDATA',data?.data || []);
-
       setAnalytics(data?.data || []);
 
     }catch(error){
@@ -105,14 +49,14 @@ const PaymentCollection: React.FC = () => {
   }
 
   const handlePaymentSubmit = async (paymentData: {
-    bookingCode: string;
-    guestName: string;
+    booking_code: string;
+    guest_name: string;
     amount: string;
-    paymentMethod: string;
-    paymentReference: string;
-    paymentDate: string;
+    payment_method: string;
+    payment_reference: string;
+    payment_date: string;
     notes: string;
-    receipt_url: File | null;
+    receipt_rl: string;
   }) => {
     setLoading(true);
     try {
@@ -129,8 +73,11 @@ const PaymentCollection: React.FC = () => {
       // 1. Send data to your API
       // 2. Update the payment history
       // 3. Refresh statistics
+
+      setShowAddPayment(false);
       
     } catch (error) {
+      toast.error(error?.response?.data?.message || 'Failed to save payments!');
       console.error('Failed to record payment:', error);
     } finally {
       setLoading(false);
@@ -298,11 +245,11 @@ const PaymentCollection: React.FC = () => {
 
         {/* Payment History */}
         <PaymentHistory 
-          payments={mockPayments}
           currencySymbol={hotelInfo?.currency_symbol || "₱"}
           onViewReceipt={handleViewReceipt}
           onExportData={handleExportData}
           onAddNewPayment={(e) => setShowAddPayment(true)}
+          apiCall={payments}
         />
       </div>
 

@@ -125,6 +125,27 @@ export const updateSettings = async (settingId, data) => { return put(`api/admin
 // Payment Collections
 export const paymentAnalytics = async(data) => { return get(`api/admin/payment-analytics?time_range=${data.time_range}`); }
 export const createPayment = async(data) => { return post(`api/admin/payments`,data); }
+export const updatePayment = async(data) => { return put(`api/admin/payments/${data.id}`,data); }
+export const voidPayment = async(data) => { return put(`api/admin/payments/${data.id}/void-transaction`); }
+export const payments = async(data = {}) => {
+  const {
+        page = 1,
+        per_page = 15,
+        time_range = '6months',
+        search = '',
+        payment_method = ''
+    } = data;
+    
+    const params = new URLSearchParams({
+        page: page.toString(),
+        per_page: per_page.toString(),
+        time_range,
+        ...(search && { search }),
+        ...(payment_method && { payment_method })
+    });
+    
+    return get(`api/admin/payments?${params.toString()}`);
+}
 
 
 // ==================================================

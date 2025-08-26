@@ -259,7 +259,7 @@ const BookingManagement: React.FC = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900 text-sm">{hotelInfo?.currency_symbol}{booking.total_amount}</div>
+                    <div className="font-medium text-gray-900 text-sm">{hotelInfo?.currency_symbol}{booking.total_amount}<span className="text-gray-500 text-xs">(+{(+hotelInfo?.tax_rate || 0).toFixed(0)}% tax)</span></div>
                     <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getPaymentStatusColor(booking.payment_status)}`}>
                       {booking.payment_status}
                     </span>
@@ -354,6 +354,15 @@ const BookingManagement: React.FC = () => {
                       <span className="text-gray-600 text-sm">Total Amount:</span>
                       <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{selectedBooking.total_amount}</span>
                     </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 text-sm">+ Tax({(+hotelInfo?.tax_rate || 0).toFixed(0)}%):</span>
+                      <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{(selectedBooking.total_amount*(hotelInfo.tax_rate / 100)).toFixed(2)}</span>
+                    </div>
+
+                    <div className="flex justify-between pt-3 border-0 border-t border-t-slate-300">
+                      <span className="text-gray-600 text-sm">Amount Due:</span>
+                      <span className="font-medium text-[#008ea2] text-sm">{hotelInfo?.currency_symbol}{(selectedBooking.total_amount*(1+hotelInfo.tax_rate / 100)).toFixed(2)}</span>
+                    </div>
                   </div>
                 </div>
                 
@@ -368,27 +377,27 @@ const BookingManagement: React.FC = () => {
               </div>
             </div>
 
-            <div className="relative grid grid-cols-1 md:grid-cols-2 bg-gray-300 mt-6 p-4 rounded-lg">
+            <div className="relative grid grid-cols-1 md:grid-cols-2 mt-6 rounded-lg">
               <div>
                 <h3 className="mb-3 font-medium text-gray-700 text-sm">Payment Status</h3>
                 <div className="flex flex-wrap gap-2">
-                  {['pending', 'paid', 'refund'].map((status) => (
+                  {['pending', 'paid'].map((status) => (
                     <button
                       key={status}
-                      disabled={statusUpdating}
+                      disabled={true}
                       onClick={() => handlePaymentStatusUpdate(selectedBooking.id, status as Booking['payment_status'])}
-                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors cursor-not-allowed ${
                         selectedBooking.payment_status === status
                           ? 'bg-[#008ea2] text-white'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      } ${statusUpdating ? 'cursor-not-allowed opacity-80':''}`}
+                      }`}
                     >
                       {status.replace('_', ' ')}
                     </button>
                   ))}
                 </div>
                 
-                {selectedBooking?.payment_status === 'paid' &&
+                {/* {selectedBooking?.payment_status === 'paid' &&
                 <>
                   <div className="mt-3">
                     <h3 className="mb-0 font-medium text-gray-700 text-sm">Payment Method</h3>
@@ -399,12 +408,12 @@ const BookingManagement: React.FC = () => {
                     <h3 className="mb-0 font-medium text-gray-700 text-sm">Method Account</h3>
                     <input onChange={(e) => setSelectedBooking((prev) => ({...prev, payment_method_account: e.target.value }))} value={selectedBooking?.payment_method_account || ""} type="text" className="px-4 py-1 border border-gray-300 focus:border-transparent rounded-lg focus:ring-[#008ea2] focus:ring-2 w-full transition-all" />
                   </div>
-                </>}
+                </>} */}
                 
 
               </div>
               
-              <div className="space-y-3">
+              {/* <div className="space-y-3">
                 {selectedBooking?.payment_status === 'paid' &&
                   <div className="mt-6 sm:mt-0 px-0 sm:px-4">
                     <h3 className="mb-3 font-medium text-gray-700 text-sm">Payment Reference</h3>
@@ -429,7 +438,7 @@ const BookingManagement: React.FC = () => {
                       <SaveIcon className="w-4 h-4" /> {statusUpdating ? 'Updating...' : 'Update Payment Info'}
                     </button>
                   </div>}
-              </div>
+              </div> */}
             </div>
             
             <div className="mt-6">

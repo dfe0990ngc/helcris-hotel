@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     email: '',
     check_in: '',
     check_out: '',
+    tax_rate: 0,
   });
 
   const [authState, setAuthState] = useState<AuthState>({
@@ -89,6 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email: '',
         check_in: '15:00',
         check_out: '11:00',
+        tax_rate: 0,
       });
     }
   }

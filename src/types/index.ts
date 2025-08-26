@@ -20,6 +20,7 @@ export interface HotelInfo {
   email: string,
   check_in: string,
   check_out: string,
+  tax_rate: number,
 }
 
 export interface Room {

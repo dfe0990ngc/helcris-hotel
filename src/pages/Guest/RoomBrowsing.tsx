@@ -304,10 +304,14 @@ const RoomBrowsing: React.FC = () => {
                     <span>Room Rate ({hotelInfo?.currency_symbol}{selectedRoom.price_per_night} × {nights} nights)</span>
                     <span>{hotelInfo?.currency_symbol}{selectedRoom.price_per_night * nights}</span>
                   </div>
+                  <div className="flex justify-between py-1">
+                    <span>+ Tax({(+hotelInfo?.tax_rate || 0).toFixed(0)}%)</span>
+                    <span>{hotelInfo?.currency_symbol}{(selectedRoom.price_per_night * nights * (hotelInfo?.tax_rate || 0) / 100).toFixed(2)}</span>
+                  </div>
                   <div className="mt-2 pt-1 border-t">
                     <div className="flex justify-between font-medium">
                       <span>Total Amount</span>
-                      <span className="text-[#008ea2]">{hotelInfo?.currency_symbol}{totalAmount}</span>
+                      <span className="text-[#008ea2]">{hotelInfo?.currency_symbol}{(totalAmount * (1+(hotelInfo?.tax_rate || 0) / 100)).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
