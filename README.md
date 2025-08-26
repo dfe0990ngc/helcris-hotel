@@ -21,8 +21,8 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/dfe0990ngc/helcris-hotel
-   cd helcris-hotel
+   git clone https://github.com/dfe0990ngc/hillcrest-suites
+   cd hillcrest-suites
    ```
 
 2. **Install dependencies**
