@@ -88,6 +88,7 @@ const RoomBrowsing = () => {
   };
 
   const checkAvailability = async () => {
+
     if (!searchCriteria.check_in || !searchCriteria.check_out) return;
     
     setAvailabilityLoading(true);
@@ -96,7 +97,7 @@ const RoomBrowsing = () => {
         check_in: searchCriteria.check_in,
         check_out: searchCriteria.check_out,
         guests: searchCriteria.guests,
-        room_type: searchCriteria.room_type || null,
+        room_type: searchCriteria.room_type || '',
       });
       
       // Update room availability status
