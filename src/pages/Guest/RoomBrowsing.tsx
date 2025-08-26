@@ -206,7 +206,7 @@ const RoomBrowsing = () => {
       });
 
       if (!data.available) {
-        toast.error('Room is no longer available for the selected dates');
+        toast.error(`Room ${room.number} is no longer available for the selected dates`);
         checkAvailability(); // Refresh availability
         return;
       }
@@ -379,11 +379,7 @@ const RoomBrowsing = () => {
               disabled={availabilityLoading}
               className="flex flex-1 justify-center items-center space-x-2 bg-[#008ea2] hover:bg-[#006b7a] disabled:opacity-50 px-4 py-2 rounded-lg font-medium text-white transition-colors"
             >
-              {availabilityLoading ? (
-                <div className="border-white border-b-2 rounded-full w-4 h-4 animate-spin"></div>
-              ) : (
-                <Search className="w-4 h-4" />
-              )}
+              <Search className="w-4 h-4" />
               <span>Search</span>
             </button>
             
