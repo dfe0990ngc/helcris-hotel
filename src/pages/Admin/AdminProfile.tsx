@@ -25,12 +25,12 @@ const AdminProfile: React.FC = () => {
   const [showImageUrlModal,setShowImageUrlModal] = useState(false);
   const [saving,setSaving] = useState(false);
 
-  const profileRef = useRef(null);
-  useEffect(() => {
-    if(!profileRef.current){
-      profileRef.current = user?.profile_url;
-    }
-  },[user]);
+  // const profileRef = useRef(null);
+  // useEffect(() => {
+  //   if(!profileRef.current){
+  //     profileRef.current = user?.profile_url;
+  //   }
+  // },[user]);
 
   const handleSave = async () => {
 
@@ -65,7 +65,7 @@ const AdminProfile: React.FC = () => {
       toast.success(data?.message || 'Profile image url has been updated successfully');
 
       // Temporarily disable deletion of image
-      
+
       // if(isCloudinaryUrl(profileRef.current)){
       //   await deleteCloudinaryImageClientSide(profileRef.current);
 
