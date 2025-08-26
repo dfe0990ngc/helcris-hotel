@@ -64,11 +64,13 @@ const GuestProfile: React.FC = () => {
       // In a real app, this would make an API call to update the user
       toast.success(data?.message || 'Profile image url has been updated successfully');
       
-      if(isCloudinaryUrl(profileRef.current)){
-        await deleteCloudinaryImageClientSide(profileRef.current);
+      // Temporarily disable deletion of image
+      
+      // if(isCloudinaryUrl(profileRef.current)){
+      //   await deleteCloudinaryImageClientSide(profileRef.current);
 
-        profileRef.current = data?.user?.profile_url;
-      }
+      //   profileRef.current = data?.user?.profile_url;
+      // }
 
       setShowImageUrlModal(false);
     }catch(error){
