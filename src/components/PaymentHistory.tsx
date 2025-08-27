@@ -58,6 +58,8 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
+
+  const [isVoiding, setIsVoiding] = useState(false);
   
   const showEditModal = (payment) => {
     setSelectedPayment(payment);
@@ -84,7 +86,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({
   }
 
   const handleVoidPayment = async (formData) => {
-    setLoading(true);
+    setIsVoiding(true);
 
     try{
       const { data } = await voidPayment({id: formData.id});
@@ -98,7 +100,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({
     }catch(error){ 
       toast.error(error?.response?.data?.message || 'Failed to void payment transaction!');
     }finally{
-      setLoading(false);
+      setIsVoiding(false);
     }
   }
 
@@ -450,6 +452,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({
               loading={loading} 
               currencySymbol={currencySymbol || "₱"} 
               payment={selectedPayment}
+              voiding={isVoiding}
             />
           </div>
         </div>
